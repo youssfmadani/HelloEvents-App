@@ -1,4 +1,7 @@
 package com.example.helloevents.models;
 
-public class Role {
+
+public enum Role {
+    ROLE_CLIENT,
+    ROLE_ADMIN
 }
