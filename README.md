@@ -54,7 +54,7 @@ Développée avec **Spring Boot**, cette application propose une interface sécu
 
 ### 📊 Diagramme de Classe
 
-![image](https://github.com/user-attachments/assets/dd679b64-ac34-4396-9609-2ccbaac911f2)
+![image](https://github.com/user-attachments/assets/4711fada-f115-4cbd-9ae2-8e94702c0477)
 
 
 ### 📊 Diagramme de Séquence
