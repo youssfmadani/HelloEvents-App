@@ -1,5 +1,6 @@
 package com.example.helloevents.controllers;
 
+import com.example.helloevents.dto.UserDTO;
 import com.example.helloevents.models.User;
 import com.example.helloevents.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class ClientController {
     private UserService userService;
 
     @GetMapping("/list")
-    public List<User> getAllClients() {
+    public List<UserDTO> getAllClients() {
         return userService.getAllUsers();
     }
 }

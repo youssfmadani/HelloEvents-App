@@ -1,10 +1,8 @@
 package com.example.helloevents.controllers;
 
-
-
+import com.example.helloevents.dto.EventDTO;
 import com.example.helloevents.models.Event;
 import com.example.helloevents.services.EventService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,24 +13,27 @@ import java.util.Optional;
 @RequestMapping("/api/events")
 public class EventController {
 
-    @Autowired
-    private EventService eventService;
+    private final EventService eventService;
+
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
+    }
 
     @GetMapping
-    public List<Event> getAllEvents() {
+    public List<EventDTO> getAllEvents() {
         return eventService.getAllEvents();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Event> getEventById(@PathVariable Long id) {
-        Optional<Event> event = eventService.getEventById(id);
-        return event.map(ResponseEntity::ok)
+    public ResponseEntity<EventDTO> getEventById(@PathVariable Long id) {
+        Optional<EventDTO> eventDTO = eventService.getEventById(id);
+        return eventDTO.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Event createEvent(@RequestBody Event event) {
-        return eventService.createEvent(event);
+    public EventDTO createEvent(@RequestBody EventDTO eventDTO) {
+        return eventService.createEvent(eventDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -41,7 +42,7 @@ public class EventController {
     }
 
     @GetMapping("/search")
-    public List<Event> searchEvents(@RequestParam(required = false) String category,
+    public List<EventDTO> searchEvents(@RequestParam(required = false) String category,
                                     @RequestParam(required = false) String location,
                                     @RequestParam(required = false) String keyword) {
         if (category != null) return eventService.searchByCategory(category);

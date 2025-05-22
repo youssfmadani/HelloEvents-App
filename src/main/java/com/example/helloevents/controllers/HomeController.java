@@ -1,6 +1,7 @@
 package com.example.helloevents.controllers;
 
 
+import com.example.helloevents.dto.EventDTO;
 import com.example.helloevents.models.Event;
 import com.example.helloevents.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class HomeController {
     private EventService eventService;
 
     @GetMapping("/events")
-    public List<Event> getHomeEvents() {
+    public List<EventDTO> getHomeEvents() {
         return eventService.getAllEvents();
     }
 

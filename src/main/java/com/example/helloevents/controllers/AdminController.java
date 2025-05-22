@@ -1,9 +1,7 @@
 package com.example.helloevents.controllers;
 
-
-
-import com.example.helloevents.models.Event;
-import com.example.helloevents.models.User;
+import com.example.helloevents.dto.EventDTO;
+import com.example.helloevents.dto.UserDTO;
 import com.example.helloevents.services.EventService;
 import com.example.helloevents.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,38 +13,47 @@ import java.util.List;
 @RequestMapping("/api/admin")
 public class AdminController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final EventService eventService;
 
     @Autowired
-    private EventService eventService;
+    public AdminController(UserService userService, EventService eventService) {
+        this.userService = userService;
+        this.eventService = eventService;
+    }
 
+    // Récupérer tous les clients sous forme de DTOs
     @GetMapping("/clients")
-    public List<User> getClients() {
+    public List<UserDTO> getClients() {
         return userService.getAllUsers();
     }
 
+    // Supprimer un client
     @DeleteMapping("/clients/{id}")
     public void deleteClient(@PathVariable Long id) {
         userService.deleteUserById(id);
     }
 
+    // Récupérer tous les événements sous forme de DTOs
     @GetMapping("/events")
-    public List<Event> getAllEvents() {
+    public List<EventDTO> getAllEvents() {
         return eventService.getAllEvents();
     }
 
+    // Créer un nouvel événement avec DTO
     @PostMapping("/events")
-    public Event createEvent(@RequestBody Event event) {
-        return eventService.createEvent(event);
+    public EventDTO createEvent(@RequestBody EventDTO eventDTO) {
+        return eventService.createEvent(eventDTO);
     }
 
+    // Mettre à jour un événement
     @PutMapping("/events/{id}")
-    public Event updateEvent(@PathVariable Long id, @RequestBody Event updatedEvent) {
-        updatedEvent.setId(id);
-        return eventService.createEvent(updatedEvent);
+    public EventDTO updateEvent(@PathVariable Long id, @RequestBody EventDTO updatedEventDTO) {
+        updatedEventDTO.setId(id);
+        return eventService.createEvent(updatedEventDTO);  // Ou une méthode update dédiée si tu préfères
     }
 
+    // Supprimer un événement
     @DeleteMapping("/events/{id}")
     public void deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);

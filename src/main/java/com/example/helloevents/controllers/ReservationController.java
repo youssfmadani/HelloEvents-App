@@ -1,8 +1,8 @@
 package com.example.helloevents.controllers;
 
-import com.example.helloevents.models.Event;
-import com.example.helloevents.models.Reservation;
-import com.example.helloevents.models.User;
+import com.example.helloevents.dto.EventDTO;
+import com.example.helloevents.dto.ReservationDTO;
+import com.example.helloevents.dto.UserDTO;
 import com.example.helloevents.services.EventService;
 import com.example.helloevents.services.ReservationService;
 import com.example.helloevents.services.UserService;
@@ -27,12 +27,12 @@ public class ReservationController {
     private EventService eventService;
 
     @PostMapping
-    public ResponseEntity<Reservation> reserve(@RequestParam Long userId, @RequestParam Long eventId) {
-        Optional<User> userOpt = userService.getUserById(userId);
-        Optional<Event> eventOpt = eventService.getEventById(eventId);
+    public ResponseEntity<ReservationDTO> reserve(@RequestParam Long userId, @RequestParam Long eventId) {
+        Optional<UserDTO> userOpt = userService.getUserById(userId);
+        Optional<EventDTO> eventOpt = eventService.getEventById(eventId);
 
         if (userOpt.isPresent() && eventOpt.isPresent()) {
-            Reservation reservation = reservationService.makeReservation(userOpt.get(), eventOpt.get());
+            ReservationDTO reservation = reservationService.makeReservation(userOpt.get(), eventOpt.get());
             return ResponseEntity.ok(reservation);
         }
 
@@ -40,16 +40,22 @@ public class ReservationController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<Reservation> getUserReservations(@PathVariable Long userId) {
-        return userService.getUserById(userId)
-                .map(reservationService::getReservationsByUser)
-                .orElse(List.of());
+    public ResponseEntity<List<ReservationDTO>> getUserReservations(@PathVariable long userId) {
+        Optional<UserDTO> userOpt = userService.getUserById(userId);
+        if (userOpt.isPresent()) {
+            List<ReservationDTO> reservations = reservationService.getReservationsByUser(userOpt.get().getId());
+            return ResponseEntity.ok(reservations);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/event/{eventId}")
-    public List<Reservation> getEventReservations(@PathVariable Long eventId) {
-        return eventService.getEventById(eventId)
-                .map(reservationService::getReservationsByEvent)
-                .orElse(List.of());
+    public ResponseEntity<List<ReservationDTO>> getEventReservations(@PathVariable Long eventId) {
+        Optional<EventDTO> eventOpt = eventService.getEventById(eventId);
+        if (eventOpt.isPresent()) {
+            List<ReservationDTO> reservations = reservationService.getReservationsByEvent(eventOpt.get().getId());
+            return ResponseEntity.ok(reservations);
+        }
+        return ResponseEntity.notFound().build();
     }
 }
